@@ -40,9 +40,8 @@ class Qonversion {
 
   /// Yields an event each time a promo transaction happens on iOS.
   /// Returns App Store product ID
-  static Stream<String> get promoPurchasesStream => _promoPurchasesEventChannel
-          .receiveBroadcastStream()
-          .cast<String>();
+  static Stream<String> get promoPurchasesStream =>
+      _promoPurchasesEventChannel.receiveBroadcastStream().cast<String>();
 
   /// Initializes Qonversion SDK with the given API key.
   /// You can get one in your account on qonversion.io.
@@ -124,8 +123,8 @@ class Qonversion {
     final rawResult = await _channel.invokeMethod(Constants.mUpdatePurchase, {
       Constants.kNewProductId: newProductId,
       Constants.kOldProductId: oldProductId,
-      Constants.kProrationMode: prorationMode != null ? prorationMode.index : null,
-
+      Constants.kProrationMode:
+          prorationMode != null ? prorationMode.index : null,
     });
     return QMapper.permissionsFromJson(rawResult);
   }
@@ -155,6 +154,10 @@ class Qonversion {
     final rawResult = await _channel.invokeMethod(Constants.mCheckPermissions);
 
     return QMapper.permissionsFromJson(rawResult);
+  }
+
+  static Future<void> presentCodeRedemptionSheet() async {
+    await _channel.invokeMethod(Constants.mPresentCodeRedemptionSheet);
   }
 
   /// Restoring purchases restores users purchases in your app, to maintain access to purchased content.
@@ -236,7 +239,8 @@ class Qonversion {
   /// See [Offerings](https://qonversion.io/docs/offerings) for more details.
   /// See [Product Center](https://qonversion.io/docs/product-center) for more details.
   static Future<QOfferings> offerings() async {
-    final offeringsString = await _channel.invokeMethod<String>(Constants.mOfferings);
+    final offeringsString =
+        await _channel.invokeMethod<String>(Constants.mOfferings);
 
     return QMapper.offeringsFromJson(offeringsString);
   }

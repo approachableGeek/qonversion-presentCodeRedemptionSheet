@@ -65,6 +65,12 @@ public class SwiftQonversionFlutterSdkPlugin: NSObject, FlutterPlugin {
     case "resetUser":
       Qonversion.resetUser()
       return result(nil)
+
+    case "presentCodeRedemptionSheet":
+      if #available(iOS 14.0, *) {
+        Qonversion.presentCodeRedemptionSheet();
+      }
+      return result(nil)
         
     default:
       break
