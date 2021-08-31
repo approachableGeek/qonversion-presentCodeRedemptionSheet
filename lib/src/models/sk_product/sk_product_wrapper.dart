@@ -70,6 +70,8 @@ class SKProductWrapper {
   factory SKProductWrapper.fromJson(Map<String, dynamic> json) =>
       _$SKProductWrapperFromJson(json);
 
+  Map<String, dynamic> toJson() => _$SKProductWrapperToJson(this);
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) {
@@ -78,7 +80,8 @@ class SKProductWrapper {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SKProductWrapper && other.productIdentifier == productIdentifier &&
+    return other is SKProductWrapper &&
+        other.productIdentifier == productIdentifier &&
         other.localizedTitle == localizedTitle &&
         other.localizedDescription == localizedDescription &&
         other.priceLocale == priceLocale &&
@@ -120,6 +123,8 @@ class SKPriceLocaleWrapper {
   factory SKPriceLocaleWrapper.fromJson(Map<String, dynamic> json) =>
       _$SKPriceLocaleWrapperFromJson(json);
 
+  Map<String, dynamic> toJson() => _$SKPriceLocaleWrapperToJson(this);
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) {
@@ -128,7 +133,8 @@ class SKPriceLocaleWrapper {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SKPriceLocaleWrapper && other.currencySymbol == currencySymbol &&
+    return other is SKPriceLocaleWrapper &&
+        other.currencySymbol == currencySymbol &&
         other.currencyCode == currencyCode;
   }
 

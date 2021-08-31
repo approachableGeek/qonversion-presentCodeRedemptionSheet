@@ -1,3 +1,20 @@
+## 4.1.1
+* Fix StrictMode policy violation errors in the Google Play Console pre-launch report.
+
+## 4.1.0
+* New Product fields: storeTitle, storeDescription, price, currencyCode, prettyIntroductoryPrice.
+* Improved errors details.
+
+## 4.0.0
+* From now Qonversion supports Google Play Billing Library 4.0.0 version for Android.
+
+## 3.3.0
+* Add `purchaseProduct()`, `updatePurchaseWithProduct()`
+* Deprecate `resetUser()`
+
+## 3.2.1
+* Fix enum dependencies
+
 ## 3.2.0
 * Add support for Android v2 embedding
 

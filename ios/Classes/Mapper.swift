@@ -13,15 +13,27 @@ enum ParsingError: Error {
 
 struct PurchaseResult {
   let permissions: [String : Qonversion.Permission]
-  let error: Error?
+  let error: NSError?
   let isCancelled: Bool
   
   func toMap() -> [String: Any?] {
     return [
       "permissions": permissions.mapValues { $0.toMap() },
-      "error": error?.localizedDescription,
+      "error": error?.toMap(),
       "is_cancelled": isCancelled,
     ]
+  }
+  
+}
+
+extension NSError {
+  func toMap() -> [String: Any?] {
+    let errorMap = [
+      "code": code,
+      "description": localizedDescription,
+      "additionalMessage": userInfo[NSDebugDescriptionErrorKey]]
+    
+    return errorMap
   }
 }
 
@@ -40,13 +52,14 @@ extension Qonversion.LaunchResult {
 extension Qonversion.Product {
   func toMap() -> [String: Any?] {
     return [
-      "id": qonversionID,
-      "store_id": storeID,
-      "type": type.rawValue,
-      "duration": duration.rawValue,
-      "sk_product": skProduct?.toMap(),
-      "pretty_price": prettyPrice,
-      "trial_duration": trialDuration.rawValue
+      ProductFields.id: qonversionID,
+      ProductFields.storeId: storeID,
+      ProductFields.type: type.rawValue,
+      ProductFields.duration: duration.rawValue,
+      ProductFields.skProduct: skProduct?.toMap(),
+      ProductFields.prettyPrice: prettyPrice,
+      ProductFields.trialDuration: trialDuration.rawValue,
+      ProductFields.offeringId: offeringID
     ]
   }
 }
@@ -69,13 +82,13 @@ extension Qonversion.Property {
     switch string {
     case "Email":
       return .email
-    
+
     case "Name":
       return .name
-    
+
     case "AppsFlyerUserId":
       return .appsFlyerUserID
-    
+
     case "AdjustAdId":
       return .adjustUserID
       
@@ -123,4 +136,35 @@ extension Dictionary {
     
     return String(data: jsonData, encoding: .utf8)
   }
+  
+  func toProduct() -> Qonversion.Product? {
+    guard let data = self as? [String: Any],
+          let id = data[ProductFields.id] as? String
+    else { return nil }
+    
+    let product = Qonversion.Product()
+    
+    product.qonversionID = id
+
+    product.storeID = data[ProductFields.storeId] as? String ?? ""
+    
+    if let type = data[ProductFields.type] as? Int {
+      product.type = Qonversion.ProductType(rawValue: type) ?? Qonversion.ProductType.unknown
+    }
+    
+    if let duration = data[ProductFields.duration] as? Int {
+      product.duration = Qonversion.ProductDuration(rawValue: duration) ?? Qonversion.ProductDuration.durationUnknown
+    }
+    
+    product.prettyPrice = data[ProductFields.prettyPrice] as? String ?? ""
+    
+    product.offeringID = data[ProductFields.offeringId] as? String
+    
+    if let trialDuration = data[ProductFields.trialDuration] as? Int {
+      product.trialDuration = Qonversion.TrialDuration(rawValue: trialDuration) ?? Qonversion.TrialDuration.notAvailable
+    }
+    
+    return product
+  }
 }
+

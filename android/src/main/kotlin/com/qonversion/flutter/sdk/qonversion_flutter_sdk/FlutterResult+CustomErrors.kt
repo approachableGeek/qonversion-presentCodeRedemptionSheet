@@ -1,5 +1,6 @@
 package com.qonversion.flutter.sdk.qonversion_flutter_sdk
 
+import com.qonversion.android.sdk.QonversionError
 import io.flutter.plugin.common.MethodChannel
 
 private const val passValidValue = "Please make sure you pass a valid value"
@@ -28,12 +29,17 @@ fun MethodChannel.Result.noProviderError() {
     return this.error("5", "Could not find provider", passValidValue)
 }
 
+fun MethodChannel.Result.noProduct() {
+    return this.error("ProductNotProvided", "Could not find product", "Please provide a valid product")
+}
+
 fun MethodChannel.Result.noProductIdError() {
     return this.error("8", "Could not find productId value", "Please provide valid productId")
 }
 
-fun MethodChannel.Result.qonversionError(message: String, cause: String) {
-    return this.error("9", message, cause)
+fun MethodChannel.Result.qonversionError(error: QonversionError) {
+    val errorDetails = getErrorDetails(error)
+    return this.error("9", error.description, errorDetails)
 }
 
 fun MethodChannel.Result.noNewProductIdError() {
@@ -41,7 +47,7 @@ fun MethodChannel.Result.noNewProductIdError() {
 }
 
 fun MethodChannel.Result.noOldProductIdError() {
-    return this.error("11", "Could not find new product id", passValidValue)
+    return this.error("11", "Could not find old product id", passValidValue)
 }
 
 fun MethodChannel.Result.parsingError(message: String?) {
@@ -56,10 +62,28 @@ fun MethodChannel.Result.noPropertyValue() {
     return this.error("14", "Could not find property value", passValidValue)
 }
 
-fun MethodChannel.Result.offeringsError(description: String?, message: String?) {
-    return this.error("OFFERINGS", "Could not get offerings", "$description $message")
+fun MethodChannel.Result.offeringsError(error: QonversionError) {
+    val errorDetails = getErrorDetails(error)
+    return this.error("Offerings", "Could not get offerings. ${error.description}.", errorDetails)
 }
 
 fun MethodChannel.Result.noSdkInfo() {
     return this.error("15", "Could not find sdk info", passValidValue)
+}
+
+fun MethodChannel.Result.noProductIdField(details: String?) {
+    return this.error("NoProductIdField", "Could not find qonversionId in Product", details)
+}
+
+fun MethodChannel.Result.jsonSerializationError(details: String?) {
+    return this.error("JSONSerialization", "JSON Serialization Error", details)
+}
+
+private fun getErrorDetails(error: QonversionError): String {
+    var result = "Qonversion Error Code: ${error.code}"
+    if (error.additionalMessage.isNotEmpty()) {
+        result += ". Additional Message: ${error.additionalMessage}"
+    }
+
+    return result
 }

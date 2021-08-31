@@ -36,6 +36,9 @@ class SKProductSubscriptionPeriodWrapper {
     return _$SKProductSubscriptionPeriodWrapperFromJson(map);
   }
 
+  Map<String, dynamic> toJson() =>
+      _$SKProductSubscriptionPeriodWrapperToJson(this);
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) {
